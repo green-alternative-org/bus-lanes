@@ -17,7 +17,7 @@ var config = {
       title: "",
       image: "",
       description:
-        '<p class="intro">The map depicts the gradual installation of bus lanes on Tbilisi&#8217;s streets since City Hall&#8217;s new administration announced a definitive turn in transport planning approach in July 2018. It shows the ebbs and flows of the inconsistent process and the remainder of the road before the ten transit corridors traversing some 110 kilometres are all finally there.</p><p class="intro" style="font-size: 12px;"><b>NOTE:</b></p><p class="intro" style="font-size: 11px;"><i><b>Please, hover over a specific lane to learn more about when and where it was installed, as well as its approximate length. Scroll up and down or zoom in and out the map to progress through the story or see more detailed picture of the network.</b></i></p>',
+        '<p class="intro">The map depicts the gradual installation of bus lanes on Tbilisi&#8217;s streets since City Hall&#8217;s new administration announced a definitive turn in transport planning approach in July 2018. It shows the ebbs and flows of the inconsistent process and the remainder of the road before the ten transit corridors traversing some 110 kilometres are all finally there.</p><p class="intro" style="font-size: 12px;"><b>NOTE:</b></p><p class="intro" style="font-size: 11px;"><i><b>Hover over a specific lane to retrieve the date, location and approximate length of the installation. Scroll up and down or zoom in and out to chart progress or view more detailed images of the network.</b></i></p>',
       location: {
         center: [44.850, 41.733],
         zoom: 10,
