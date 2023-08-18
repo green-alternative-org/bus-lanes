@@ -17,7 +17,7 @@ var config = {
       title: "",
       image: "",
       description:
-        '<p class="intro">The map depicts the gradual installation of bus lanes on Tbilisi&#8217;s streets since City Hall&#8217;s new administration announced a definitive turn in transport planning approach in July 2018. It shows the ebbs and flows of the inconsistent process and the remainder of the road before the ten transit corridors traversing some 110 kilometres are all finally there.</p><p class="intro" style="font-size: 12px;"><b>NOTE:</b></p><p class="intro" style="font-size: 11px;"><i><b>Hover over a specific lane to retrieve the date, location and approximate length of the installation. Scroll up and down or zoom in and out to chart progress or view more detailed images of the network.</b></i></p>',
+        '<p class="intro">The map depicts the gradual installation of bus lanes -- a critical priority for enhancing the efficiency of public transportation in Tbilisi -- after City Hall announced a U-turn in its approach to transportation planning in July 2018.</p><p class="intro" style="font-size: 12px;"><b>NOTE:</b></p><p class="intro" style="font-size: 11px;"><i><b>Hover over a specific lane to retrieve the date, location and approximate length of the installation. Scroll up and down or zoom in and out to chart progress or view more detailed images of the network.</b></i></p>',
       location: {
         center: [44.850, 41.733],
         zoom: 10,
@@ -231,7 +231,7 @@ var config = {
       title: "July 2023",
       image: "",
       description:
-        'The bus lane network in Tbilisi increased by an additional <span style="color: #9a0000;"><strong>13.5 kilometres</strong></span>. led just over <b>55% (61 km)</b> of the designated bus lanes and in a way that is extremely fragmented, forming none of the proposed 10 arterial bus corridors to date. ',
+        'The bus lane network in Tbilisi increased by an additional <span style="color: #9a0000;"><strong>13.5 kilometres</strong></span>.',
       location: {
         center: [44.809, 41.733],
         zoom: 11.15,
@@ -308,7 +308,7 @@ var config = {
       title: "Future Expansion",
       image: "",
       description:
-        'Five years after declaring public transport a priority, City Hall has only managed to install just over 55 per cent (61 kilometres) of the designated bus lanes. Overall, implementation of the project has been extremely fragmented and none of the proposed 10 arterial bus corridors have been established. Once complete, the TBT network should connect the fragmented lanes and cover some <span style="color: #9a0000;"><strong>110 kilometres/strong></span>. But if the process continues at the usual speed, it will take four more years before the whole network is finally established. In addition, recent official permission granted to certain categories of taxis to use bus lanes further reduces the speed of public transport and undermines the integrity of the bus lane system, not to mention the entire transport reform.<p><div class="legend-scale"><ul class="legend-labels"><li><span style="background:#cd3333;"></span>Existing Routes</li><li><span style="background:#0e5c5d;"></span>Planned Routes</li></ul></div><p>',
+        'Five years after declaring public transport a priority, City Hall has only managed to install just over <b>55 per cent (61 kilometres)</b> of the designated bus lanes. Overall, implementation of the project has been extremely fragmented and none of the proposed 10 arterial bus corridors have been established. Once complete, the TBT network should connect the fragmented lanes and cover some <span style="color: #9a0000;"><strong>110 kilometres</strong></span>. But if the process continues at the usual speed, it will take four more years before the whole network is finally established. In addition, recent official permission granted to certain categories of taxis to use bus lanes further reduces the speed of public transport and undermines the integrity of the bus lane system, not to mention the entire transport reform.<p><div class="legend-scale"><ul class="legend-labels"><li><span style="background:#cd3333;"></span>Existing Routes</li><li><span style="background:#0e5c5d;"></span>Planned Routes</li></ul></div><p>',
       location: {
         center: [44.809, 41.733],
         zoom: 11.15,
