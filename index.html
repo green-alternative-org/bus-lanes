@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Tbilisi Bus Lane Network</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta
+      name="description"
+      content="Observing the evolution of Tbilisi bus lane network"
+    />
+    <meta
+      name="news_keywords"
+      content="urban mobility transportation tbilisi georgia sakartvelo data"
+    />
+
+    <meta property="og:title" content="Tbilisi Bus Lane Network" />
+    <meta
+      property="og:image"
+      content="https://github.com/axis-Z/greenalt-project/scrolly/img/thumbnail-en.png"
+    />
+    <meta property="og:site_name" content="Z.axıs & Green Alternative" />
+    <meta property="og:url" content="" />
+    <meta
+      property="og:description"
+      content="Observing the evolution of Tbilisi bus lane network"
+    />
+    <meta property="og:type" content="interactive_map" />
+    <meta property="og:locale" content="en_US" />
+
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
+    <link
+      href="https://api.tiles.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/intersection-observer@0.5.1/intersection-observer.js"></script>
+    <script src="https://unpkg.com/scrollama"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Noto+Sans+Georgian:wght@300&family=Noto+Sans+Mono:wght@100;200;300;400;500;600;700;800;900&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+    </style>
+
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Noto Sans Georgian", sans-serif;
+      }
+
+      a {
+        color: #0e5c5d;
+      }
+      a:hover {
+        color: #72b2a6;
+      }
+
+      #map {
+        top: 0;
+        height: 100vh;
+        width: 100vw;
+        position: fixed;
+      }
+      #header {
+        font-family: "Noto Sans Georgian", sans-serif;
+        font-size: 14px;
+        margin: auto;
+        width: 100%;
+        position: relative;
+        z-index: 5;
+        border-radius: 0px !important;
+        box-shadow: 0px 1px #72b2a6;
+      }
+      #header h1,
+      #header h2 {
+        margin: 0;
+        padding: 1vw 0 0.5vw 0;
+        text-align: center;
+      }
+
+      #header p.intro {
+        width: 40vw;
+        margin: 0 auto;
+        padding: 0.25vw 0 0.5vw 0;
+        font-size: 14px;
+        text-align: justify;
+      }
+
+      #footer {
+        width: 100%;
+        background-color: rgba(250, 250, 250, 0.75);
+        min-height: 5vh;
+        padding-top: 2vh;
+        padding-bottom: 2vh;
+        text-align: center;
+        line-height: 25px;
+        font-size: 11px;
+        position: relative;
+        border-radius: 0px !important;
+        box-shadow: 1px 0px #72b2a6;
+        z-index: 5;
+      }
+      
+      #features {
+        padding-top: 10vh;
+        padding-bottom: 10vh;
+      }
+
+      /* Define the bounce animation - currently deactivated
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+            transform: translateY(0);
+        }
+        40% {
+            transform: translateY(-8px);
+        }
+        60% {
+            transform: translateY(-4px);
+        }
+    } */
+
+      /* Apply the animation to the <img> element */
+      #intro-arrow {
+        animation: bounce 2s infinite;
+      }
+
+      .hidden {
+        visibility: hidden;
+      }
+      .centered {
+        width: 45vw;
+        margin: 0 auto;
+        text-align: justify;
+      }
+      .lefty {
+        width: 20vw;
+        margin-left: 5vw;
+      }
+      .righty {
+        max-width: 25vw;
+        margin-left: 70vw;
+        text-align: justify;
+      }
+      .fully {
+        width: 100%;
+        margin: auto;
+      }
+      .light {
+        color: #444;
+        background-color: #fafafa;
+        border-radius: 5px;
+        box-shadow: 0.5px 1px 1px 1px #b6b5b5;
+      }
+      .dark {
+        color: #fafafa;
+        background-color: #444;
+        border-radius: 5px;
+      }
+      .step {
+        padding-bottom: 50vh;
+        /* margin-bottom: 10vh; */
+        opacity: 0.25;
+      }
+      .step.active {
+        opacity: 0.9;
+      }
+
+      .step div {
+        padding: 25px;
+        line-height: 20px;
+        font-size: 13px;
+      }
+
+      .step img {
+        width: 100%;
+      }
+
+      .legend-scale {
+        margin-top: -10%;
+        margin-bottom: -8%;
+      }
+
+      .legend-scale ul {
+        list-style: none;
+      }
+      .legend-scale ul li {
+        font-size: 80%;
+        list-style: none;
+        margin-left: 0;
+        line-height: 18px;
+      }
+      ul.legend-labels li span {
+        float: left;
+        height: 2.5px;
+        width: 50px;
+        margin-right: 20px;
+        margin-top: 10px;
+      }
+
+      /* Custom styles for the popup container */
+      .mapboxgl-popup {
+        position: absolute;
+        pointer-events: none;
+        color: #fff;
+        background-color: rgba(0, 0, 0, 0.7);
+        max-width: 350px;
+        padding: 8px;
+        font-family: "Space Mono", monospace;
+        font-size: 11px;
+        border-radius: 5px;
+      }
+
+      /* Hide the default inner box of the popup */
+      .mapboxgl-popup-content {
+        padding: 0; /* Remove padding */
+        background: none; /* Remove background color */
+        border: none; /* Remove border */
+        box-shadow: none; /* Remove box shadow */
+      }
+
+      /* Hide the triangle shape (arrow) */
+      .mapboxgl-popup-tip {
+        display: none;
+      }
+
+      /* Custom styles for the popup content (inside the container) */
+      .mapboxgl-popup-content-wrapper {
+        /* Customize the content appearance here */
+        padding: 10px; /* Add padding to the content wrapper if desired */
+      }
+
+      .zaxis-attr {
+        border-radius: 5px;
+        position: absolute;
+        bottom: 30px;
+        right: 1%;
+        z-index: 1000;
+      }
+
+      span.attr {
+        font-family: Fira Sans, sans-serif;
+        text-align: right;
+        font-weight: 400;
+        font-size: 12px;
+        color: white;
+        text-shadow: -0.5px -0.5px 0 black, 0.5px -0.5px 0 black,
+          -0.5px 0.5px 0 black, 0.5px 0.5px 0 black;
+      }
+
+      span.attr-icon {
+        font-family: Fira Sans, sans-serif;
+        text-align: justify;
+        font-weight: 400;
+        font-size: 12px;
+        text-align: right;
+        color: white;
+        text-shadow: -0.5px -0.5px 0 black, 0.5px -0.5px 0 black,
+          -0.5px 0.5px 0 black, 0.5px 0.5px 0 black;
+      }
+
+      a.zaxis {
+        text-decoration: none;
+        color: white;
+        font-family: Noto Serif Georgia;
+        font-size: 12.5px;
+        font-weight: 300;
+        text-shadow: -0.5px -0.5px 0 black, 0.5px -0.5px 0 black,
+          -0.5px 0.5px 0 black, 0.5px 0.5px 0 black;
+      }
+
+      .icon {
+        position: absolute;
+        right: 1%;
+        display: block;
+        background-color: rgba(250, 250, 250, 0.75);
+        padding: 2px;
+        margin: 1px;
+        border-radius: 5px;
+      }
+
+      @media (max-width: 750px) {
+        .centered,
+        .lefty,
+        .fully {
+          width: 90vw;
+          margin: 0 auto;
+        }
+
+        .righty {
+          max-width: 90vw;
+          margin: 0 auto;
+          text-align: justify;
+        }
+
+        .zaxis-attr {
+          border-radius: 5px;
+          position: absolute;
+          bottom: 30px;
+          right: 1%;
+          z-index: 1000;
+        }
+
+        span.attr {
+          font-family: Fira Sans, sans-serif;
+          font-weight: 400;
+          font-size: 9px;
+          text-align: right;
+          color: white;
+          text-shadow: -0.5px -0.5px 0 black, 0.5px -0.5px 0 black,
+            -0.5px 0.5px 0 black, 0.5px 0.5px 0 black;
+        }
+
+        span.attr-icon {
+          font-family: Fira Sans, sans-serif;
+          text-align: justify;
+          font-weight: 400;
+          font-size: 9px;
+          color: white;
+          text-shadow: -0.5px -0.5px 0 black, 0.5px -0.5px 0 black,
+            -0.5px 0.5px 0 black, 0.5px 0.5px 0 black;
+        }
+
+        a.zaxis {
+          text-decoration: none;
+          color: white;
+          font-family: Noto Serif Georgia;
+          font-size: 9.5px;
+          font-weight: 300;
+          text-shadow: -0.5px -0.5px 0 black, 0.5px -0.5px 0 black,
+            -0.5px 0.5px 0 black, 0.5px 0.5px 0 black;
+        }
+        
+        .icon {
+          position: absolute;
+          right: 1%;
+          display: block;
+          background-color: rgba(250, 250, 250, 0.75);
+          padding: 2px;
+          margin: 1px;
+          border-radius: 5px;
+        }
+      }
+
+      /* Fix issue on mobile browser where scroll breaks  */
+      .mapboxgl-canvas-container.mapboxgl-touch-zoom-rotate.mapboxgl-touch-drag-pan,
+      .mapboxgl-canvas-container.mapboxgl-touch-zoom-rotate.mapboxgl-touch-drag-pan
+        .mapboxgl-canvas {
+        touch-action: unset;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map">
+      <div class="zaxis-attr">
+        <span class="attr">Built by</span>
+        <a class="zaxis" href="https://zaxis.ge/">Z.axıs |</a>
+        <span class="attr-icon">Courtesy of </span
+        ><img
+          class="icon"
+          src="https://raw.githubusercontent.com/axis-Z/greenalt-project/main/scrolly/img/GA_logo_English.png"
+          alt="green alternative logo"
+          width="95%"
+        />
+      </div>
+    </div>
+    <div id="story"></div>
+    <script src="./config.js"></script>
+    <script>
+      var layerTypes = {
+        fill: ["fill-opacity"],
+        line: ["line-opacity"],
+        circle: ["circle-opacity", "circle-stroke-opacity"],
+        symbol: ["icon-opacity", "text-opacity"],
+        raster: ["raster-opacity"],
+        "fill-extrusion": ["fill-extrusion-opacity"],
+        heatmap: ["heatmap-opacity"],
+      };
+
+      var alignments = {
+        left: "lefty",
+        center: "centered",
+        right: "righty",
+        full: "fully",
+      };
+
+      function getLayerPaintType(layer) {
+        var layerType = map.getLayer(layer).type;
+        return layerTypes[layerType];
+      }
+
+      function setLayerOpacity(layer) {
+        var paintProps = getLayerPaintType(layer.layer);
+        paintProps.forEach(function (prop) {
+          var options = {};
+          if (layer.duration) {
+            var transitionProp = prop + "-transition";
+            options = { duration: layer.duration };
+            map.setPaintProperty(layer.layer, transitionProp, options);
+          }
+          map.setPaintProperty(layer.layer, prop, layer.opacity, options);
+        });
+      }
+
+      var story = document.getElementById("story");
+      var features = document.createElement("div");
+      features.setAttribute("id", "features");
+
+      var header = document.createElement("div");
+
+      if (config.title) {
+        var titleText = document.createElement("h1");
+        titleText.innerHTML = config.title;
+        header.appendChild(titleText);
+      }
+
+      if (config.subtitle) {
+        var subtitleText = document.createElement("h2");
+        subtitleText.innerText = config.subtitle;
+        header.appendChild(subtitleText);
+      }
+
+      if (config.intro) {
+        var introText = document.createElement("p");
+        introText.innerHTML = config.intro;
+        header.appendChild(introText);
+      }
+
+      if (config.byline) {
+        var bylineText = document.createElement("p");
+        bylineText.innerHTML = config.byline;
+        header.appendChild(bylineText);
+      }
+
+      if (header.innerText.length > 0) {
+        header.classList.add(config.theme);
+        header.setAttribute("id", "header");
+        story.appendChild(header);
+      }
+
+      config.chapters.forEach((record, idx) => {
+        var container = document.createElement("div");
+        var chapter = document.createElement("div");
+
+        if (record.title) {
+          var title = document.createElement("h3");
+          title.innerHTML = record.title;
+          chapter.appendChild(title);
+        }
+
+        if (record.image) {
+          var image = new Image();
+          image.src = record.image;
+          chapter.appendChild(image);
+        }
+
+        if (record.description) {
+          var story = document.createElement("p");
+          story.innerHTML = record.description;
+          chapter.appendChild(story);
+        }
+
+        container.setAttribute("id", record.id);
+        container.classList.add("step");
+        if (idx === 0) {
+          container.classList.add("active");
+        }
+
+        chapter.classList.add(config.theme);
+        container.appendChild(chapter);
+        container.classList.add(alignments[record.alignment] || "centered");
+        if (record.hidden) {
+          container.classList.add("hidden");
+        }
+        features.appendChild(container);
+      });
+
+      story.appendChild(features);
+
+      var footer = document.createElement("div");
+
+      if (config.footer) {
+        var footerText = document.createElement("p");
+        footerText.innerHTML = config.footer;
+        footer.appendChild(footerText);
+      }
+
+      if (footer.innerText.length > 0) {
+        footer.classList.add(config.theme);
+        footer.setAttribute("id", "footer");
+        story.appendChild(footer);
+      }
+
+      mapboxgl.accessToken = config.accessToken;
+
+      const transformRequest = (url) => {
+        const hasQuery = url.indexOf("?") !== -1;
+        const suffix = hasQuery
+          ? "&pluginName=scrollytellingV2"
+          : "?pluginName=scrollytellingV2";
+
+        return {
+          url: url + suffix,
+        };
+      };
+
+      var map = new mapboxgl.Map({
+        container: "map",
+        style: config.style,
+        center: config.chapters[0].location.center,
+        zoom: config.chapters[0].location.zoom,
+        bearing: config.chapters[0].location.bearing,
+        pitch: config.chapters[0].location.pitch,
+        interactive: true,
+        attributionControl: false,
+        minZoom: 9,
+        maxZoom: 13,
+        transformRequest: transformRequest,
+      });
+
+      if (config.showMarkers) {
+        var marker = new mapboxgl.Marker({ color: config.markerColor });
+        marker.setLngLat(config.chapters[0].location.center).addTo(map);
+      }
+
+      // instantiate the scrollama
+      var scroller = scrollama();
+
+      map.on("load", function () {
+        if (config.use3dTerrain) {
+          map.addSource("mapbox-dem", {
+            type: "raster-dem",
+            url: "mapbox://mapbox.mapbox-terrain-dem-v1",
+            tileSize: 512,
+            maxzoom: 14,
+          });
+          // add the DEM source as a terrain layer with exaggerated height
+          map.setTerrain({ source: "mapbox-dem", exaggeration: 1.5 });
+
+          // add a sky layer that will show when the map is highly pitched
+          map.addLayer({
+            id: "sky",
+            type: "sky",
+            paint: {
+              "sky-type": "atmosphere",
+              "sky-atmosphere-sun": [0.0, 0.0],
+              "sky-atmosphere-sun-intensity": 15,
+            },
+          });
+        }
+
+        // Add zoom and rotation controls to the map.
+        map.addControl(new mapboxgl.FullscreenControl());
+        map.addControl(new mapboxgl.NavigationControl());
+
+        // setup the instance, pass callback functions
+        scroller
+          .setup({
+            step: ".step",
+            offset: 0.5,
+            progress: true,
+          })
+          .onStepEnter((response) => {
+            var chapter = config.chapters.find(
+              (chap) => chap.id === response.element.id
+            );
+            response.element.classList.add("active");
+            map[chapter.mapAnimation || "flyTo"](chapter.location);
+
+            if (config.showMarkers) {
+              marker.setLngLat(chapter.location.center);
+            }
+            if (chapter.onChapterEnter.length > 0) {
+              chapter.onChapterEnter.forEach(setLayerOpacity);
+            }
+            if (chapter.callback) {
+              window[chapter.callback]();
+            }
+            if (chapter.rotateAnimation) {
+              map.once("moveend", function () {
+                const rotateNumber = map.getBearing();
+                map.rotateTo(rotateNumber + 90, {
+                  duration: 24000,
+                  easing: function (t) {
+                    return t;
+                  },
+                });
+              });
+            }
+          })
+          .onStepExit((response) => {
+            var chapter = config.chapters.find(
+              (chap) => chap.id === response.element.id
+            );
+            response.element.classList.remove("active");
+            if (chapter.onChapterExit.length > 0) {
+              chapter.onChapterExit.forEach(setLayerOpacity);
+            }
+          });
+      });
+
+      // Create a popup, but don't add it to the map yet.
+      var popup = new mapboxgl.Popup({
+        closeButton: false,
+        closeOnClick: false,
+      });
+
+      function showPopup(e) {
+        // Updates the cursor to a hand (interactivity)
+        map.getCanvas().style.cursor = "pointer";
+
+        // Show the popup at the coordinates with some data
+        if (e.features.length > 0) {
+          // For point features, show the popup at the feature's coordinates
+          var feature = e.features[0];
+          if (feature.geometry.type === "Point") {
+            var coordinates = feature.geometry.coordinates;
+            popup
+              .setLngLat(coordinates)
+              .setHTML(checkEmpty(feature.properties.Id))
+              .addTo(map);
+          } else if (feature.geometry.type === "LineString") {
+            // For line features, extract relevant properties to customize the content
+            var properties = feature.properties;
+
+            // Customize the content for line features
+            var popupContent = "<h3>" + properties.Location + "</h3>"; // Example: Display the name of the line
+            // Add more properties as needed to the popupContent
+            if (properties.Period) {
+              popupContent +=
+                "<span><strong>Period:</strong> " +
+                properties.Period +
+                "</span>";
+            }
+            if (properties.Direction) {
+              popupContent +=
+                "<br><span><strong>Direction:</strong> " +
+                properties.Direction +
+                "</span>";
+            }
+            if (properties.Length) {
+              popupContent +=
+                "<br><span><strong>Length (m):</strong> " +
+                properties.Length +
+                "</span>";
+            }
+
+            var coordinates = e.lngLat;
+            popup.setLngLat(coordinates).setHTML(popupContent).addTo(map);
+          }
+        }
+      }
+
+      function hidePopup() {
+        map.getCanvas().style.cursor = "";
+        popup.remove();
+      }
+
+      function checkEmpty(info) {
+        return info ? info : "No data";
+      }
+
+      // CHANGE: Add layer names that need to be interactive
+      map.on("mousemove", "tbs-bus-lanes-2018", showPopup);
+      map.on("mouseleave", "tbs-bus-lanes-2018", hidePopup);
+
+      map.on("mousemove", "tbs-bus-lanes-2019", showPopup);
+      map.on("mouseleave", "tbs-bus-lanes-2019", hidePopup);
+
+      map.on("mousemove", "tbs-bus-lanes-2020", showPopup);
+      map.on("mouseleave", "tbs-bus-lanes-2020", hidePopup);
+
+      map.on("mousemove", "tbs-bus-lanes-2021", showPopup);
+      map.on("mouseleave", "tbs-bus-lanes-2021", hidePopup);
+
+      map.on("mousemove", "tbs-bus-lanes-2022", showPopup);
+      map.on("mouseleave", "tbs-bus-lanes-2022", hidePopup);
+
+      map.on("mousemove", "tbs-bus-lanes-2023", showPopup);
+      map.on("mouseleave", "tbs-bus-lanes-2023", hidePopup);
+
+      // setup resize event
+      window.addEventListener("resize", scroller.resize);
+    </script>
+  </body>
+</html>
