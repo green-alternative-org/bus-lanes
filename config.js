@@ -1,7 +1,7 @@
 var config = {
-  style: "mapbox://styles/jorjone90/clkgpfa8o006t01pbct1ye32p",
+  style: "mapbox://styles/green-alternative/cll5b4x5n00jh01p89mvq8uh1",
   accessToken:
-    "pk.eyJ1Ijoiam9yam9uZTkwIiwiYSI6ImNrZ3R6M2FvdTBwbmwycXBibGRqM2w2enYifQ.BxjvFSGqefuC9yFCrXC-nQ",
+    "pk.eyJ1IjoiZ3JlZW4tYWx0ZXJuYXRpdmUiLCJhIjoiY2xsMjUxaTRoMHhpaTNvcDNkamJ4eGR4dyJ9.b5bOAfCyK8WDWV9Kb6lBIQ",
   showMarkers: false,
   theme: "light",
   title: "",
